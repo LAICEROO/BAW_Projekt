@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Logowanie - Zoo Manager{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h1>Login</h1>
+    <div class="login-form">
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="signin">Sign In</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

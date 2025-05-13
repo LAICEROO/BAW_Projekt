@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista Zwierząt - Zoo Manager{% endblock %}
+
+{% block content %}
+<div class="animal-list-container">
+    <h1>Lista Zwierząt</h1>
+    {% if animals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Gatunek</th>
+                    <th>Imię</th>
+                    <th>Płeć</th>
+                    <th>Wybieg</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+                <tr>
+                    <td>{{ animal.species }}</td>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.get_gender_display }}</td> {# Używamy get_GENDER_display dla pól z choices #}
+                    <td>{{ animal.enclosure.name|default:"Brak przypisanego wybiegu" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Brak zwierząt do wyświetlenia.</p>
+    {% endif %}
+    {# Możesz tu dodać link do dodawania nowego zwierzęcia #}
+</div>
+{% endblock %} 

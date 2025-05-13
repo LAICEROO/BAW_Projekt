@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista Wybiegów - Zoo Manager{% endblock %}
+
+{% block content %}
+<div class="enclosure-list-container">
+    <h1>Lista Wybiegów</h1>
+    {% if enclosures %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nazwa Wybiegu</th>
+                    <th>Liczba Zwierząt</th>
+                    <th>Odpowiedzialny Pracownik</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enclosure in enclosures %}
+                <tr>
+                    <td>{{ enclosure.name }}</td>
+                    <td>{{ enclosure.animal_count }}</td>
+                    <td>{{ enclosure.responsible_employee.get_full_name|default:"Nieprzypisany" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Brak wybiegów do wyświetlenia.</p>
+    {% endif %}
+    {# Możesz tu dodać link do tworzenia nowego wybiegu #}
+</div>
+{% endblock %} 

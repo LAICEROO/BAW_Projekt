@@ -72,6 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BAW.wsgi.application'
 
+AUTH_USER_MODEL = 'zoo_manager.Employee'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

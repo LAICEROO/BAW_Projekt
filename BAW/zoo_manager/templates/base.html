@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Zoo Manager{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="https://tinyurl.com/4uejp5ay">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'home' %}"><img src="https://tinyurl.com/4uejp5ay" alt="Logo Zoo Manager" height="50px"></a>
+            <nav>
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li>Witaj, {{ user.username }}!</li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}"> {# Zaktualizowano action #}
+                                {% csrf_token %}
+                                <button type="submit">Wyloguj</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Zaloguj</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <main>
+            {% block content %}
+            <!-- Treść strony będzie tutaj wstawiana -->
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; {% now "Y" %} Zoo Manager. Wszelkie prawa zastrzeżone.</p>
+        </footer>
+    </div>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

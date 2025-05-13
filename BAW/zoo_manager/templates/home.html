@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Strona Główna - Zoo Manager{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    {% if user.is_authenticated %}
+        <h1>Witaj na stronie głównej, {{ user.username }}!</h1>
+        <p>To jest Twoje centrum zarządzania Zoo.</p>
+        
+        <h2>Dostępne akcje:</h2>
+        <ul>
+            <li><a href="{% url 'task_list' %}">Przejdź do listy zadań</a></li>
+            <li><a href="{% url 'enclosure_list' %}">Zobacz wybiegi</a></li>
+            <li><a href="{% url 'animal_list' %}">Zobacz listę zwierząt</a></li>
+            
+            {% if user.role == 'manager' %}
+                <li><a href="{% url 'add_employee' %}">Dodaj nowego pracownika</a></li>
+                <li><a href="{% url 'add_animal' %}">Dodaj nowe zwierzę</a></li>
+                <li><a href="{% url 'assign_task' %}">Dodaj/Przypisz zadanie</a></li>
+            {% endif %}
+        </ul>
+    {% else %}
+        <h1>Witaj w Zoo Manager!</h1>
+        <p>Aby kontynuować, <a href="{% url 'login' %}">zaloguj się</a>.</p>
+    {% endif %}
+</div>
+{% endblock %} 

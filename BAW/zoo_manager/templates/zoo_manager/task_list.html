@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista Zadań - Zoo Manager{% endblock %}
+
+{% block content %}
+<div class="task-list-container">
+    <h1>Lista Zadań</h1>
+    {% if tasks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Typ Zadania</th>
+                    <th>Pracownik</th>
+                    <th>Data i Godzina</th>
+                    <th>Czy Ukończone?</th>
+                    <th>Komentarze</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.task_type }}</td>
+                    <td>{{ task.employee.get_full_name|default:"Nieprzypisany" }}</td>
+                    <td>{{ task.task_timestamp|date:"Y-m-d H:i" }}</td>
+                    <td>{% if task.is_completed %}Tak{% else %}Nie{% endif %}</td>
+                    <td>{{ task.comments|default:"-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Brak zadań do wyświetlenia.</p>
+    {% endif %}
+    {# Możesz tu dodać link do tworzenia nowego zadania #}
+    {# <p><a href="#">Dodaj nowe zadanie</a></p> #}
+</div>
+{% endblock %} 
