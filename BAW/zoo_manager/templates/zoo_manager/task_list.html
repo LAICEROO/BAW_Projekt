@@ -5,6 +5,13 @@
 {% block content %}
 <div class="task-list-container">
     <h1>Lista Zadań</h1>
+
+    {% if user.role == 'manager' %} {# Tylko manager może dodawać zadania #}
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'assign_task' %}" class="btn btn-primary">Dodaj/Przypisz zadanie</a>
+    </div>
+    {% endif %}
+
     {% if tasks %}
         <table>
             <thead>
@@ -14,6 +21,7 @@
                     <th>Data i Godzina</th>
                     <th>Czy Ukończone?</th>
                     <th>Komentarze</th>
+                    {% if user.is_authenticated %}<th>Akcje</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +32,13 @@
                     <td>{{ task.task_timestamp|date:"Y-m-d H:i" }}</td>
                     <td>{% if task.is_completed %}Tak{% else %}Nie{% endif %}</td>
                     <td>{{ task.comments|default:"-" }}</td>
+                    {% if user == task.employee or user.role == 'manager' %}
+                    <td>
+                        <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-warning">Edytuj</a>
+                    </td>
+                    {% elif user.is_authenticated %}
+                    <td></td> {# Pusta komórka dla zalogowanych, ale nieuprawnionych #}
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Przypisz Zadanie{% endblock %}
+{% block title %}Dodaj Wybieg{% endblock %}
 
 {% block content %}
-<h1>Przypisz Nowe Zadanie</h1>
+<h1>Dodaj Nowy Wybieg</h1>
 
 {% if messages %}
     {% for message in messages %}
@@ -14,7 +14,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Zapisz Zadanie</button>
-    <a href="{% url 'task_list' %}" class="btn btn-secondary">Anuluj</a>
+    <button type="submit" class="btn btn-success">Zapisz Wybieg</button>
+    <a href="{% url 'enclosure_list' %}" class="btn btn-secondary">Anuluj</a>
 </form>
 {% endblock %} 

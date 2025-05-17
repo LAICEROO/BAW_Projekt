@@ -1,0 +1,52 @@
+{% extends "base.html" %}  {# Załóżmy, że masz base.html #}
+
+{% block title %}Lista Pracowników{% endblock %}
+
+{% block content %}
+<h1>Lista Pracowników</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'add_employee' %}" class="btn btn-primary">Dodaj Pracownika</a>
+</div>
+
+{% if employees %}
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Nazwa użytkownika</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Rola</th>
+                <th>Wybieg</th>
+                <th>Aktywny</th>
+                <th>Akcje</th> {# Dodatkowa kolumna na akcje np. edycja/usuwanie #}
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.username }}</td>
+                <td>{{ employee.imie }}</td>
+                <td>{{ employee.nazwisko }}</td>
+                <td>{{ employee.get_role_display }}</td>
+                <td>{{ employee.enclosure.name|default:"Brak" }}</td>
+                <td>{% if employee.is_active %}Tak{% else %}Nie{% endif %}</td>
+                <td>
+                    {# Link do edycji pracownika - do zaimplementowania #}
+                    <a href="{% url 'edit_employee' employee.id %}" class="btn btn-sm btn-warning">Edytuj</a> 
+                    {% if user.pk != employee.pk %} {# Manager nie może usunąć siebie z listy #}
+                    <form method="POST" action="{% url 'delete_employee' employee.id %}" style="display: inline;" onsubmit="return confirm('Czy na pewno chcesz usunąć tego pracownika? Tej operacji nie można cofnąć.');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nie znaleziono żadnych pracowników.</p>
+{% endif %}
+
+{% endblock %} 

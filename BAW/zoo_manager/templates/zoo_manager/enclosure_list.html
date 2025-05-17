@@ -5,6 +5,13 @@
 {% block content %}
 <div class="enclosure-list-container">
     <h1>Lista Wybiegów</h1>
+
+    {% if user.role == 'manager' %} {# Tylko manager może dodawać wybiegi #}
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'add_enclosure' %}" class="btn btn-primary">Dodaj nowy wybieg</a>
+    </div>
+    {% endif %}
+
     {% if enclosures %}
         <table>
             <thead>
@@ -12,14 +19,21 @@
                     <th>Nazwa Wybiegu</th>
                     <th>Liczba Zwierząt</th>
                     <th>Odpowiedzialny Pracownik</th>
+                    {% if user.role == 'manager' %}<th>Akcje</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for enclosure in enclosures %}
                 <tr>
                     <td>{{ enclosure.name }}</td>
-                    <td>{{ enclosure.animal_count }}</td>
+                    <td>{{ enclosure.current_animal_count }}</td>
                     <td>{{ enclosure.responsible_employee.get_full_name|default:"Nieprzypisany" }}</td>
+                    {% if user.role == 'manager' %}
+                    <td>
+                        <a href="{% url 'edit_enclosure' enclosure.id %}" class="btn btn-sm btn-warning">Edytuj</a>
+                        {# Można tu dodać przycisk Usuń #}
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

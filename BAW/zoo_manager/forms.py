@@ -1,21 +1,59 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import Employee, Animal, Task
+# Import PasswordInput; remove if forms.PasswordInput is directly usable.
+# from django.forms.widgets import PasswordInput # No, forms.PasswordInput is the way
+from .models import Employee, Animal, Task, Enclosure
 
 class EmployeeCreationForm(UserCreationForm):
+    # Password fields will be inherited from UserCreationForm
+
     class Meta(UserCreationForm.Meta):
         model = Employee
-        fields = UserCreationForm.Meta.fields + ('imie', 'nazwisko', 'role', 'enclosure')
-        # Możesz dostosować etykiety lub widżety, jeśli potrzebujesz
-        # labels = {
-        #     'imie': 'Imię',
-        #     'nazwisko': 'Nazwisko',
-        # }
+        # Temporarily reduced fields to match simplified add_fieldsets
+        fields = ('username', 'imie', 'nazwisko', 'role', 'enclosure')
 
-class EmployeeChangeForm(UserChangeForm): # Formularz do edycji, może się przydać później
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ustawienie pola 'enclosure' jako nieobowiązkowe w formularzu
+        if 'enclosure' in self.fields:
+            self.fields['enclosure'].required = False
+        # Ustawienie pola 'groups' jako nieobowiązkowe, Django samo zarządza jego wymagalnością
+        if 'groups' in self.fields:
+            self.fields['groups'].required = False
+
+class EmployeeChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Employee
-        fields = UserChangeForm.Meta.fields # Możesz tu też dodać swoje pola, jeśli mają być edytowalne
+        fields = ('username', 'imie', 'nazwisko', 'role', 'enclosure', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ustawienie pola 'enclosure' jako nieobowiązkowe w formularzu
+        if 'enclosure' in self.fields:
+            self.fields['enclosure'].required = False
+        # Ustawienie pola 'groups' i 'user_permissions' jako nieobowiązkowe
+        if 'groups' in self.fields:
+            self.fields['groups'].required = False
+        if 'user_permissions' in self.fields:
+            self.fields['user_permissions'].required = False
+
+class EnclosureForm(forms.ModelForm):
+    class Meta:
+        model = Enclosure
+        fields = ('name', 'responsible_employee') # animal_count is likely managed automatically
+        # Można dodać widgety lub etykiety w razie potrzeby
+
+class TaskCompletionForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('is_completed', 'comments')
+        widgets = {
+            'comments': forms.Textarea(attrs={'rows': 3}),
+        }
+        labels = {
+            'is_completed': 'Zadanie ukończone',
+            'comments': 'Dodatkowe uwagi'
+        }
 
 # Formularz do dodawania Zwierzęcia
 class AnimalForm(forms.ModelForm):

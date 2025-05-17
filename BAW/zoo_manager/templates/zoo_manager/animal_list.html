@@ -5,6 +5,13 @@
 {% block content %}
 <div class="animal-list-container">
     <h1>Lista Zwierząt</h1>
+
+    {% if user.role == 'manager' %} {# Tylko manager może dodawać zwierzęta #}
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'add_animal' %}" class="btn btn-primary">Dodaj nowe zwierzę</a>
+    </div>
+    {% endif %}
+
     {% if animals %}
         <table>
             <thead>

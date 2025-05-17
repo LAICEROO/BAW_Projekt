@@ -16,7 +16,7 @@
             <nav>
                 <ul>
                     {% if user.is_authenticated %}
-                        <li>Witaj, {{ user.username }}!</li>
+                        <li>Witaj, {{ user.get_full_name }}!</li>
                         <li>
                             <form method="post" action="{% url 'logout' %}"> {# Zaktualizowano action #}
                                 {% csrf_token %}

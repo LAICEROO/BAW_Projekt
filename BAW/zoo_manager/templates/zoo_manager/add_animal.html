@@ -1,9 +1,20 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Dodaj Zwierzę - Zoo Manager{% endblock %}
+{% block title %}Dodaj Zwierzę{% endblock %}
 
 {% block content %}
 <h1>Dodaj Nowe Zwierzę</h1>
-<p>Ta strona będzie zawierać formularz dodawania nowego zwierzęcia.</p>
-<!-- Tutaj umieścisz formularz Django -->
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Zapisz Zwierzę</button>
+    <a href="{% url 'animal_list' %}" class="btn btn-secondary">Anuluj</a>
+</form>
 {% endblock %} 

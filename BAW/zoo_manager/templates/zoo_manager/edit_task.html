@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Edytuj Zadanie - {{ task.task_type }}{% endblock %}
+
+{% block content %}
+<h1>Edytuj Zadanie: {{ task.task_type }}</h1>
+<p>Przypisane do: {{ task.employee.get_full_name|default:"Nieprzypisany" }}</p>
+<p>Data i godzina: {{ task.task_timestamp|date:"Y-m-d H:i" }}</p>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Zapisz Zmiany</button>
+    <a href="{% url 'task_list' %}" class="btn btn-secondary">Anuluj</a>
+</form>
+
+{# Dla managera można by wyświetlić dodatkowe informacje lub opcje, jeśli TaskForm ma więcej pól niż TaskCompletionForm #}
+{% if user.role == 'manager' and form.fields|length > 2 %} {# Prosty warunek, można go dostosować #}
+    <hr>
+    <p><strong>Panel Managera:</strong> Pamiętaj, że edytujesz jako manager z dostępem do wszystkich pól zadania.</p>
+{% endif %}
+
+{% endblock %} 

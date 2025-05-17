@@ -27,7 +27,7 @@ class EmployeeManager(BaseUserManager):
 
         return self.create_user(username, password, **extra_fields)
 
-class Employee(AbstractBaseUser, PermissionsMixin):
+class Employee(PermissionsMixin, AbstractBaseUser):
     ROLE_CHOICES = [
         ('manager', 'Manager'),
         ('worker', 'Worker'),
@@ -59,7 +59,6 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
 class Enclosure(models.Model):
     name = models.TextField()
-    animal_count = models.IntegerField(default=0)
     responsible_employee = models.ForeignKey(
         Employee,
         on_delete=models.SET_NULL,
@@ -73,6 +72,10 @@ class Enclosure(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def current_animal_count(self):
+        return self.animal_set.count()
 
 class Animal(models.Model):
     GENDER_CHOICES = [
