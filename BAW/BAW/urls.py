@@ -23,7 +23,8 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('zoo_manager.urls')),
+    path('', include('zoo_manager.urls')),  # Web interface
+    path('api/', include('zoo_manager.api_urls')),  # REST API
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
