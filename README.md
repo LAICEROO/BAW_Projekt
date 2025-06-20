@@ -51,9 +51,8 @@ npm run dev
 - **Panel admin Django**: http://localhost:8000/admin
 
 ### Dane testowe
-Po uruchomieniu migracji możesz utworzyć testowe konta:
-- **Manager**: username: `admin`, password: `admin123`
-- **Pracownik**: username: `worker`, password: `worker123`
+Po uruchomieniu migracji możesz użyć testowe konta:
+- **Manager**: username: `admin`, password: `Admin_123`
 
 ### Rozwiązywanie problemów
 
