@@ -8,18 +8,18 @@ class EmployeeAdmin(UserAdmin):
     form = EmployeeChangeForm
 
     # Pola wyświetlane na liście użytkowników
-    list_display = ('username', 'imie', 'nazwisko', 'role', 'is_staff', 'is_active', 'enclosure')
+    list_display = ('username', 'imie', 'nazwisko', 'role', 'is_staff', 'is_active')
     # Pola, po których można sortować
     ordering = ('username',)
     # Filtry po prawej stronie
-    list_filter = ('role', 'is_staff', 'is_superuser', 'is_active', 'groups', 'enclosure')
+    list_filter = ('role', 'is_staff', 'is_superuser', 'is_active', 'groups')
     # Jeśli chcesz umożliwić wyszukiwanie po tych polach
     search_fields = ('username', 'imie', 'nazwisko')
 
     # Fieldset dla edycji istniejącego użytkownika
     fieldsets = (
         (None, {'fields': ('username',)}), # Usunięto 'password' stąd
-        ('Informacje osobiste', {'fields': ('imie', 'nazwisko', 'role', 'enclosure')}),
+        ('Informacje osobiste', {'fields': ('imie', 'nazwisko', 'role', 'enclosures')}),
         ('Uprawnienia', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Ważne daty', {'fields': ('last_login',)}), 
     )
@@ -32,7 +32,7 @@ class EmployeeAdmin(UserAdmin):
         }),
         ('Informacje osobiste', {
             'classes': ('wide',),
-            'fields': ('imie', 'nazwisko', 'role', 'enclosure'),
+            'fields': ('imie', 'nazwisko', 'role', 'enclosures'),
         }),
         # Temporarily commenting out permissions to isolate the issue
         # ('Uprawnienia', {
@@ -47,7 +47,14 @@ class EmployeeAdmin(UserAdmin):
 # Zarejestruj swój niestandardowy model Employee z niestandardowym EmployeeAdmin
 admin.site.register(Employee, EmployeeAdmin)
 
+class EnclosureAdmin(admin.ModelAdmin):
+    list_display = ('name', 'get_responsible_employees')
+
+    def get_responsible_employees(self, obj):
+        return ", ".join([e.get_full_name() for e in obj.responsible_employees.all()])
+    get_responsible_employees.short_description = 'Odpowiedzialni pracownicy'
+
 # Pozostałe modele rejestrujemy jak wcześniej
-admin.site.register(Enclosure)
+admin.site.register(Enclosure, EnclosureAdmin)
 admin.site.register(Animal)
 admin.site.register(Task)

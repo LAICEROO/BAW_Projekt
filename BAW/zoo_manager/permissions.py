@@ -80,3 +80,44 @@ class CanEditOwnTasksOnly(permissions.BasePermission):
         
         return False
 
+
+class CanEditAnimalHealth(permissions.BasePermission):
+    """
+    Pozwala pracownikom tylko na aktualizację stanu zdrowia zwierząt,
+    a managerom na pełną kontrolę
+    """
+    
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+            
+        # Pozwól na odczyt wszystkim zalogowanym użytkownikom
+        if request.method in permissions.SAFE_METHODS:
+            return True
+            
+        # Manager ma pełne uprawnienia
+        if request.user.role == 'manager':
+            return True
+            
+        # Pracownik może tylko aktualizować (PATCH)
+        if request.method == 'PATCH':
+            return True
+            
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        if not request.user or not request.user.is_authenticated:
+            return False
+            
+        # Manager ma pełne uprawnienia
+        if request.user.role == 'manager':
+            return True
+            
+        # Pracownik może tylko aktualizować stan zdrowia
+        if request.method == 'PATCH':
+            # Sprawdź czy w danych jest tylko pole health
+            if request.data.keys() == {'health'}:
+                return True
+                
+        return False
+

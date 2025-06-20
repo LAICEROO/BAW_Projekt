@@ -38,7 +38,7 @@ class Employee(PermissionsMixin, AbstractBaseUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='worker')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    enclosure = models.ForeignKey('Enclosure', on_delete=models.SET_NULL, null=True, blank=True, related_name='employees')
+    enclosures = models.ManyToManyField('Enclosure', blank=True, related_name='employees')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['imie', 'nazwisko', 'role']
@@ -59,13 +59,7 @@ class Employee(PermissionsMixin, AbstractBaseUser):
 
 class Enclosure(models.Model):
     name = models.TextField()
-    responsible_employee = models.ForeignKey(
-        Employee,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='responsible_enclosures',
-    )
+    responsible_employees = models.ManyToManyField('Employee', blank=True, related_name='responsible_enclosures')
 
     class Meta:
         db_table = 'enclosures'
@@ -88,6 +82,7 @@ class Animal(models.Model):
     name = models.TextField()
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
     enclosure = models.ForeignKey(Enclosure, on_delete=models.SET_NULL, null=True, blank=True)
+    health = models.BooleanField(default=True)  # True = zdrowy, False = chory
     
     class Meta:
         db_table = 'animals'
@@ -98,6 +93,7 @@ class Animal(models.Model):
 class Task(models.Model):
     task_timestamp = models.DateTimeField()
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
+    enclosure = models.ForeignKey(Enclosure, on_delete=models.SET_NULL, null=True, blank=True)
     task_type = models.TextField()
     comments = models.TextField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)

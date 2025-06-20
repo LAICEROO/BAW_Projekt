@@ -44,7 +44,8 @@ def logout_view(request):
 
 @login_required
 def task_list_view(request):
-    tasks = Task.objects.all().order_by('-task_timestamp')
+    # Pobierz dane z bazy danych
+    tasks = Task.objects.all().order_by('-task_timestamp')  # type: ignore
     context = {
         'tasks': tasks
     }
@@ -52,7 +53,8 @@ def task_list_view(request):
 
 @login_required
 def enclosure_list_view(request):
-    enclosures = Enclosure.objects.all().order_by('name')
+    # Pobierz dane z bazy danych
+    enclosures = Enclosure.objects.all().order_by('name')  # type: ignore
     context = {
         'enclosures': enclosures
     }
@@ -60,7 +62,8 @@ def enclosure_list_view(request):
 
 @login_required
 def animal_list_view(request):
-    animals = Animal.objects.all().order_by('species', 'name')
+    # Pobierz dane z bazy danych
+    animals = Animal.objects.all().order_by('species', 'name')  # type: ignore
     context = {
         'animals': animals
     }
@@ -69,7 +72,8 @@ def animal_list_view(request):
 @login_required
 @permission_required('zoo_manager.view_employee', login_url='/login/')
 def employee_list_view(request):
-    employees = Employee.objects.select_related('enclosure').all().order_by('nazwisko', 'imie')
+    # Pobierz dane z bazy danych
+    employees = Employee.objects.select_related('enclosure').all().order_by('nazwisko', 'imie')  # type: ignore
     context = {
         'employees': employees
     }

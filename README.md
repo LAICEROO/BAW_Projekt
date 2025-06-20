@@ -1,5 +1,93 @@
 # Projekt BAW - System Zarządzania ZOO
 
+## Instrukcje uruchomienia
+
+### Wymagania systemowe
+- Python 3.8+
+- Node.js 16+
+- npm lub yarn
+
+### Kroki uruchomienia
+
+#### 1. Backend (Django)
+```bash
+# Przejdź do katalogu BAW
+cd BAW
+
+# Zainstaluj zależności Python
+pip install -r ../requirements.txt
+
+# Uruchom migracje bazy danych
+python manage.py migrate
+
+# Utwórz superużytkownika (opcjonalnie)
+python manage.py createsuperuser
+
+# Uruchom serwer Django
+python manage.py runserver
+```
+
+**Lub użyj skryptu PowerShell:**
+```powershell
+# Uruchom skrypt startowy
+.\start_zoo_manager.ps1
+```
+
+#### 2. Frontend (React/TypeScript)
+```bash
+# Przejdź do katalogu frontend
+cd frontend
+
+# Zainstaluj zależności Node.js
+npm install
+
+# Uruchom serwer deweloperski
+npm run dev
+```
+
+#### 3. Dostęp do aplikacji
+- **Backend API**: http://localhost:8000
+- **Frontend**: http://localhost:5173
+- **Panel admin Django**: http://localhost:8000/admin
+
+### Dane testowe
+Po uruchomieniu migracji możesz utworzyć testowe konta:
+- **Manager**: username: `admin`, password: `admin123`
+- **Pracownik**: username: `worker`, password: `worker123`
+
+### Rozwiązywanie problemów
+
+#### Błąd "Module not found"
+```bash
+# Zainstaluj ponownie zależności
+pip install -r requirements.txt
+npm install
+```
+
+#### Błąd "Port already in use"
+```bash
+# Sprawdź jakie procesy używają portów
+netstat -ano | findstr :8000
+netstat -ano | findstr :5173
+
+# Zatrzymaj procesy lub zmień porty
+```
+
+#### Błąd migracji
+```bash
+# Usuń pliki migracji i utwórz ponownie
+cd BAW
+rm -rf zoo_manager/migrations/0*.py
+python manage.py makemigrations
+python manage.py migrate
+```
+
+#### Błąd "Permission denied" w PowerShell
+```powershell
+# Uruchom PowerShell jako administrator lub zmień politykę wykonywania
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
 ## Opis Projektu
 
 Projekt BAW to aplikacja webowa stworzona w Django, służąca do zarządzania ogrodem zoologicznym. Umożliwia zarządzanie pracownikami, wybiegami, zwierzętami oraz zadaniami. Aplikacja rozróżnia role użytkowników (manager, pracownik) i dostosowuje dostępne funkcjonalności w zależności od posiadanych uprawnień.
